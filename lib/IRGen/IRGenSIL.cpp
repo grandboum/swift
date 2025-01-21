@@ -4788,13 +4788,13 @@ void IRGenSILFunction::visitEndApply(BeginApplyInst *i, EndApplyInst *ei) {
 
   if (!isAbort) {
     auto resultType = call->getType();
+    Explosion e;
     if (!resultType->isVoidTy()) {
-      Explosion e;
       // FIXME: Do we need to handle ABI-related conversions here?
       // It seems we cannot have C function convention for coroutines, etc.
       extractScalarResults(*this, resultType, call, e);
-      setLoweredExplosion(ei, e);
     }
+    setLoweredExplosion(ei, e);
   }
 
   coroutine.Temporaries.destroyAll(*this);
