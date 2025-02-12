@@ -8046,7 +8046,7 @@ static bool hasMoveTypeOperations(const clang::CXXRecordDecl *decl) {
     return false;
 
   return llvm::any_of(decl->ctors(), [](clang::CXXConstructorDecl *ctor) {
-    return ctor->isMoveConstructor();
+    return ctor->isMoveConstructor() && !hasNonFirstDefaultArg(ctor);
   });
 }
 
@@ -8063,6 +8063,14 @@ static bool hasDestroyTypeOperations(const clang::CXXRecordDecl *decl) {
 static bool hasCustomCopyOrMoveConstructor(const clang::CXXRecordDecl *decl) {
   return decl->hasUserDeclaredCopyConstructor() ||
          decl->hasUserDeclaredMoveConstructor();
+}
+
+static bool
+hasConstructorWithUnsupportedDefaultArgs(const clang::CXXRecordDecl *decl) {
+  return llvm::any_of(decl->ctors(), [](clang::CXXConstructorDecl *ctor) {
+    return (ctor->isCopyConstructor() || ctor->isMoveConstructor()) &&
+           hasNonFirstDefaultArg(ctor);
+  });
 }
 
 static bool isSwiftClassType(const clang::CXXRecordDecl *decl) {
@@ -8119,6 +8127,9 @@ CxxRecordSemantics::evaluate(Evaluator &evaluator,
         importerImpl->diagnose(loc, diag::api_pattern_attr_ignored,
                                "import_iterator", decl->getNameAsString());
     }
+
+    if (hasConstructorWithUnsupportedDefaultArgs(cxxDecl))
+      return CxxRecordSemanticsKind::UnavailableConstructors;
 
     return CxxRecordSemanticsKind::MissingLifetimeOperation;
   }
