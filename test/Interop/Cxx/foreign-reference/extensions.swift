@@ -1,4 +1,4 @@
-// RUN: %target-run-simple-swift(-I %S/Inputs/ -Xfrontend -enable-experimental-cxx-interop -Xfrontend -disable-availability-checking -Onone)
+// RUN: %target-run-simple-swift(-I %S/Inputs/ -Xfrontend -cxx-interoperability-mode=default -Xfrontend -disable-availability-checking -Onone)
 // REQUIRES: executable_test
 
 import ReferenceCounted
