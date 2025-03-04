@@ -24,4 +24,26 @@ enum EnumInNestedNS {
 
 }
 
+namespace HdCamera {
+namespace P {
+enum Projection { Perspective = 0, Orthographic };
+}
+} // namespace HdCamera
+
+namespace GfCamera {
+namespace P {
+enum Projection { Perspective = 0, Orthographic };
+}
+} // namespace GfCamera
+
+// class HdCamera {
+// public:
+//   enum Projection { Perspective = 0, Orthographic };
+// };
+
+// class GfCamera {
+// public:
+//   enum Projection { Perspective = 0, Orthographic };
+// };
+
 #endif // TEST_INTEROP_CXX_ENUM_INPUTS_NESTED_ENUMS_H

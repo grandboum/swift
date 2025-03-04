@@ -1452,6 +1452,9 @@ namespace {
             isa<clang::ObjCCompatibleAliasDecl>(clangDecl)) {
           getMutableImportInfo().SymbolNamespace =
             TypeImportSymbolNamespace::CTypedef;
+        } else if (isa<clang::EnumDecl>(clangDecl)) {
+          getMutableImportInfo().ABIName =
+              clangDecl->getQualifiedNameAsString();
         }
       }
 
